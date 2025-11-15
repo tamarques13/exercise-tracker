@@ -13,6 +13,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 const users = []
+const exercises = []
 let idCounter = 1
 
 app.post('/api/users', (req, res) => {
@@ -27,16 +28,54 @@ app.post('/api/users', (req, res) => {
     });
   }
 
-  const id = idCounter++;
+  const id = String(idCounter++);
   const newUser = { username: usernameInput, _id: id };
-  
+
   users.push(newUser)
-  console.log(users)
 
   res.json({
     username: usernameInput,
     _id: id
   });
+})
+
+app.post('/api/users/:_id/exercises', (req, res) => {
+  const id = req.params._id
+  const descriptionInput = req.body.description
+  const durationInput = req.body.duration
+  let dateInput = req.body.date
+
+  if (!dateInput) {
+    dateInput = new Date();
+  } else {
+    dateInput = new Date(dateInput);
+  }
+
+  const formattedDate = dateInput.toISOString().split('T')[0];
+  const existingUser = Object.values(users).find(user => user._id === id);
+
+  const newExercise = {
+    username: existingUser.username,
+    description: descriptionInput,
+    duration: durationInput,
+    date: formattedDate,
+    _id: existingUser._id
+  }
+
+  exercises.push(newExercise)
+
+  res.json({
+    username: existingUser.username,
+    description: descriptionInput,
+    duration: durationInput,
+    date: formattedDate,
+    _id: existingUser._id
+  })
+})
+
+app.get('/api/users/', (req, res) => {
+
+  res.json(users)
 })
 
 const listener = app.listen(process.env.PORT || 3000, () => {
