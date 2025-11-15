@@ -12,7 +12,7 @@ app.get('/', (req, res) => {
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-const users = {}
+const users = []
 let idCounter = 1
 
 app.post('/api/users', (req, res) => {
@@ -28,11 +28,9 @@ app.post('/api/users', (req, res) => {
   }
 
   const id = idCounter++;
-  users[id] = {
-    username: usernameInput,
-    _id: id
-  };
-
+  const newUser = { username: usernameInput, _id: id };
+  
+  users.push(newUser)
   console.log(users)
 
   res.json({
