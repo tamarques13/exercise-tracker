@@ -42,7 +42,7 @@ app.post('/api/users', (req, res) => {
 app.post('/api/users/:_id/exercises', (req, res) => {
   const id = req.params._id
   const descriptionInput = req.body.description
-  const durationInput = req.body.duration
+  const durationInput = Number(req.body.duration)
   let dateInput = req.body.date
 
   if (!dateInput) {
@@ -51,8 +51,10 @@ app.post('/api/users/:_id/exercises', (req, res) => {
     dateInput = new Date(dateInput);
   }
 
-  const formattedDate = dateInput.toISOString().split('T')[0];
+  const formattedDate = dateInput.toDateString();
   const existingUser = Object.values(users).find(user => user._id === id);
+
+  if (!existingUser) res.json({ error: "User not found" });
 
   const newExercise = {
     username: existingUser.username,
