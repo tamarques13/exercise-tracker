@@ -13,7 +13,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 const users = []
-const exercises = []
+const logs = []
 let idCounter = 1
 
 app.post('/api/users', (req, res) => {
@@ -41,7 +41,7 @@ app.post('/api/users', (req, res) => {
 
 app.post('/api/users/:_id/exercises', (req, res) => {
   const id = req.params._id
-  const descriptionInput = req.body.description
+  const descriptionInput = String(req.body.description);
   const durationInput = Number(req.body.duration)
   let dateInput = req.body.date
 
@@ -52,19 +52,18 @@ app.post('/api/users/:_id/exercises', (req, res) => {
   }
 
   const formattedDate = dateInput.toDateString();
-  const existingUser = Object.values(users).find(user => user._id === id);
 
+  const existingUser = Object.values(users).find(user => user._id === id);
   if (!existingUser) res.json({ error: "User not found" });
 
   const newExercise = {
-    username: existingUser.username,
     description: descriptionInput,
     duration: durationInput,
     date: formattedDate,
     _id: existingUser._id
   }
 
-  exercises.push(newExercise)
+  logs.push(newExercise)
 
   res.json({
     username: existingUser.username,
@@ -78,6 +77,22 @@ app.post('/api/users/:_id/exercises', (req, res) => {
 app.get('/api/users/', (req, res) => {
 
   res.json(users)
+})
+
+app.get('/api/users/:_id/logs', (req, res) => {
+  const id = req.params._id
+
+  const existingUser = users.find(user => user._id === id);
+  if (!existingUser) return res.json({ error: "User not found" });
+
+  const userLogs = logs.filter(log => log._id === id);
+
+  res.json({
+    username: existingUser.username,
+    _id: id,
+    count: userLogs.length,
+    log: userLogs
+  });
 })
 
 const listener = app.listen(process.env.PORT || 3000, () => {
