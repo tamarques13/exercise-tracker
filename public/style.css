@@ -1,59 +1,222 @@
-* {
-  box-sizing: border-box;
+/* GLOBAL -------------------------------------------------- */
+body, html {
+  font-family: 'Roboto', sans-serif;
+  font-size: 16px;
+  background-color: #111;
+  margin: 0;
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-body {
-  font-family:sans-serif;
-  margin: 25px;
-  color: #222;
-  background-color: #f5f5f5;
+/* PAGE LAYOUT ---------------------------------------------- */
+#page {
+  width: 95%;
+  max-width: 95%;
+  height: 90vh;
+  display: flex;
+  gap: 25px;
 }
 
-h1 {
-  font-weight: bold;
-  
+/* LEFT PANEL ------------------------------------------------ */
+#left {
+  width: 50%;
+  background: #111; /* terminal dark */
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+  overflow-y: auto;
+  color: #0ef0a3; /* neon green text */
 }
 
-p {
-  max-width: 900px;
+#left h1 {
+  margin-top: 0;
+  font-size: 1.9rem;
+  text-align: center;
+  color: #0ef0a3; /* neon green */
 }
 
-form {
+#left hr {
+  height: 3px;
+  border: none;
   margin-bottom: 25px;
-  padding: 15px;
-  background-color: #87D37C;
-  display: inline-block;
-  width: 100%;
-  max-width: 340px;
-  border-radius: 5px;
+  background: linear-gradient(to right, #0ef0a3, #1cffa5);
 }
 
-input {
+/* EXPANDABLE BOXES ------------------------------------------ */
+.expand-box {
+  margin-bottom: 18px;
+  border-radius: 14px;
+  background: #0d0d0d; /* darker card */
+  box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+  overflow: hidden;
+  transition: 0.3s ease;
+  border: 1px solid #0ef0a320; /* faint green border */
+}
+
+.box-header {
   display: block;
-  margin-bottom: 10px;
-  padding: 5px;
-  width: 100%;
-  border: 1px solid lightgrey;
-  border-radius: 3px;
-  font-size: 16px;
-}
-
-input[type=submit] {
-  font-size: 16px;
-  border-radius: 3px;
-  background-color: #E4F1FE;
-  border: 1px solid grey;
-  box-shadow: 2px 2px #999;
+  padding: 15px 20px;
+  font-size: 1.2rem;
+  font-weight: 600;
   cursor: pointer;
+  background: #151515;
+  color: #0ef0a3;
+  transition: background 0.2s ease;
+  user-select: none;
+  border-bottom: 1px solid #0ef0a330;
 }
 
-input[type=submit]:hover {
-  background-color: #FFFEC4;
+.box-header:hover {
+  background: #1c1c1c;
 }
 
-code {
+.expand-box input:checked + .box-header {
+  background: linear-gradient(135deg, #0ef0a3, #1cffb3);
+  color: #000;
+}
+
+.box-content {
+  max-height: 0;
+  overflow: hidden;
+  padding: 0 20px;
+  transition: max-height 0.35s ease, padding 0.2s ease;
+  color: #c0ffd9;
+}
+
+.expand-box input:checked ~ .box-content {
+  max-height: 600px;
+  padding: 20px;
+}
+
+.expand-box > input[type="checkbox"] {
+  display: none;
+}
+
+/* FORMS ----------------------------------------------------- */
+form input,
+form button,
+#logUserId,
+#btnListUsers,
+#btnGetLogs {
+  width: 100%;
+  margin-bottom: 12px;
+  padding: 12px;
+  box-sizing: border-box;
+  border-radius: 10px;
+  font-size: 1rem;
+}
+
+/* INPUTS */
+form input,
+#logUserId {
+  border: 1px solid #0ef0a350;
+  background: #0a0a0a;
+  color: #0ef0a3;
+}
+
+form input::placeholder,
+#logUserId::placeholder {
+  color: #0ef0a380;
+}
+
+/* BUTTONS */
+form button,
+#btnListUsers,
+#btnGetLogs {
+  border: none;
+  color: #000;
+  font-weight: 700;
+  cursor: pointer;
+  background: linear-gradient(135deg, #0ef0a3, #1cffb3);
+  transition: 0.2s ease;
+}
+
+form button:hover,
+#btnListUsers:hover,
+#btnGetLogs:hover  {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(0,255,150,0.3);
+}
+
+
+/* RIGHT PANEL (CONSOLE) ------------------------------------- */
+#right {
+  width: 50%;
+  background: #111;
+  color: #0ef0a3;
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
   font-family: monospace;
-  font-size: 1.2em;
-  background-color: #FFFEC4;
-  padding: 2px;
+}
+
+#right h2 {
+  color: #fff;
+  margin-top: 0;
+  text-align: center;
+}
+
+#consoleOutput {
+  background: #111;
+  padding: 15px;
+  height: 85%;
+  overflow-y: auto;
+  border-radius: 10px;
+  white-space: pre-wrap;
+}
+
+/* TEXT SELECTION (highlight) */
+::selection {
+  background: #0ef0a380; /* semi-transparent neon green */
+  color: #000;           /* readable black text */
+}
+
+::-moz-selection {
+  background: #0ef0a380;
+  color: #000;
+}
+
+/* CHROME AUTOFILL FIX */
+input:-webkit-autofill {
+  -webkit-text-fill-color: #0ef0a3 !important;
+  box-shadow: 0 0 0 1000px #0a0a0a inset !important; /* background */
+  border: 1px solid #0ef0a350 !important;
+}
+
+input:-webkit-autofill::selection {
+  background: #0ef0a380 !important;
+  color: #000 !important;
+}
+
+/* SCROLLBAR STYLING - Webkit (Chrome, Edge, Safari) */
+#left::-webkit-scrollbar,
+#right::-webkit-scrollbar {
+  width: 12px;
+}
+
+#left::-webkit-scrollbar-track,
+#right::-webkit-scrollbar-track {
+  background: #111; /* match panel background */
+  border-radius: 10px;
+}
+
+#left::-webkit-scrollbar-thumb,
+#right::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #0ef0a3, #1cffb3);
+  border-radius: 10px;
+}
+
+#left::-webkit-scrollbar-thumb:hover,
+#right::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #1cffb3, #0ef0a3);
+}
+
+/* SCROLLBAR STYLING - Firefox */
+#left,
+#right {
+  scrollbar-width: thin;
+  scrollbar-color: #0ef0a3 #111; /* thumb color / track color */
 }
